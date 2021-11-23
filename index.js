@@ -44,10 +44,12 @@ deps = _.difference(deps, ignoreDeps)
 devDeps = _.difference(devDeps, ignoreDeps)
 
 // just output console
-console.log('\n\n---- deps ----');
+console.log('\n---- deps ----');
 console.log(deps.join('\n'));
 console.log('\n\n---- devDeps ----');
 console.log(devDeps.join('\n'));
+console.log('\n\n---- ignoreDeps ----');
+console.log(ignoreDeps.join('\n'));
 console.log('\n');
 
 // to string
@@ -84,7 +86,8 @@ console.log(`🚀 Exec Verbose Info\n`);
 console.log(`   updd - v${upddPkg.version}`);
 console.log(`project - v${pkg.version}`);
 
-console.log(`\n\n${execStr}\n\n`);
+// eslint-disable-next-line max-len
+console.log(`\n\n\n${execStr.split('&&').map((e) => _.trim(e)).join('\n\n')}\n\n`); // prettier-ignore
 
 exec(execStr, (err, stdout) => {
   if (err) console.error(`ERROR: exec (${err})`);
