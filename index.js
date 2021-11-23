@@ -8,6 +8,10 @@ const CWD_DIR = process.cwd();
 const ROOT_DIR = path.resolve(CWD_DIR);
 const PACKAGE_JSON_FILE = path.resolve(`${ROOT_DIR}/package.json`);
 
+upddPkg = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf8')
+);
+
 if (!fs.existsSync(PACKAGE_JSON_FILE)) {
   console.error(`ERROR: Not Found package.json file. (${PACKAGE_JSON_FILE})`);
   process.exit();
@@ -40,7 +44,6 @@ deps = _.difference(deps, ignoreDeps)
 devDeps = _.difference(devDeps, ignoreDeps)
 
 // just output console
-console.log(`\nupdd v${pkg.version}`);
 console.log('\n\n---- deps ----');
 console.log(deps.join('\n'));
 console.log('\n\n---- devDeps ----');
@@ -77,7 +80,11 @@ if (!execStr) {
   console.error(`ERROR: Not Found exec. (${execStr})`);
 }
 
-console.log(`\n\n🚀 Run Exec:\n\n${execStr}\n\n`);
+console.log(`\n\n🚀 Exec Verbose Info\n`);
+console.log(`updd    - v${pkg.version}`);
+console.log(`project - v${upddPkg.version}`);
+
+console.log(`\n\n${execStr}\n\n`);
 
 exec(execStr, (err, stdout) => {
   if (err) console.error(`ERROR: exec (${err})`);
