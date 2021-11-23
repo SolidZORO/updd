@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/SolidZORO/updd/compare/v1.0.0...v1.1.0) (2021-11-23)
+
+
+### Bug Fixes
+
+* fixed desp or devDesp empty value ([39e88f8](https://github.com/SolidZORO/updd/commit/39e88f8a1fb3886e386a7e750a412eb7bea56a45))
+
 ## [1.0.0](https://github.com/SolidZORO/updd/compare/v0.0.1...v1.0.0) (2021-11-23)
 
 
