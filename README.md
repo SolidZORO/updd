@@ -68,7 +68,7 @@ MIT © 2021
 
 [license-badge-svg]: https://img.shields.io/badge/License-MIT-green.svg
 
-[version-badge-svg]: https://badge.fury.io/js/%40SolidZORO%2Fupdd.svg
+[version-badge-svg]: https://badge.fury.io/js/updd.svg
 
-[version-badge-url]: https://badge.fury.io/js/%40SolidZORO%2Fupdd
+[version-badge-url]: https://badge.fury.io/js/updd
 
