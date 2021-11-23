@@ -2,7 +2,7 @@
 
 [![VERSION][version-badge-svg]][version-badge-url] [![LICENSE][license-badge-svg]](./LICENSE)
 
-update package's dependencies & devDependencies to latest version.
+Update package.json dependencies & devDependencies to latest version.
 
 ## Installation
 
@@ -56,6 +56,8 @@ e.g.:
 ## Principle
 
 Collect all `dependencies` and `devDependencies`, install, it will automatically update to the latest version.
+
+Can be used instead of `yarn upgrade-interactive` to solve the non-update problem.
 
 
 ## License
