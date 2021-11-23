@@ -1,0 +1,7 @@
+node_modules
+*.md
+
+/tsconfig.json
+/tsconfig.extend.json
+/src/libs/_fork/*
+/src/libs/_fork/

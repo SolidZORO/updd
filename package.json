@@ -1,0 +1,53 @@
+{
+  "name": "updd",
+  "description": "update package's dependencies & devDependencies to latest version",
+  "version": "0.0.1",
+  "main": "index.js",
+  "sideEffect": false,
+  "author": "Jason Feng <solidzoro@live.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/SolidZORO/updd",
+  "bin": {
+    "updd": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SolidZORO/updd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SolidZORO/updd/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "-------------------------------- TOOL ----": "----",
+    "versionup": "standard-version -r patch",
+    "versionup:minor": "standard-version -r minor",
+    "versionup:major": "standard-version -r major",
+    "versionup:init": "standard-version --first-release",
+    "release-beta": "npm publish --dist-tag --tag beta",
+    "release": "npm publish --dist-tag"
+  },
+  "keywords": [
+    "yarn",
+    "npm",
+    "upgrade",
+    "interactive",
+    "upgrade-interactive",
+    "cli"
+  ],
+  "updd": {
+    "client": "yarn",
+    "ignore": [
+      "https://github.com/SolidZORO/updd",
+      "react"
+    ]
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+  }
+}
