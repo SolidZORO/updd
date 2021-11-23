@@ -39,23 +39,45 @@ try {
 deps = _.difference(deps, ignoreDeps)
 devDeps = _.difference(devDeps, ignoreDeps)
 
-console.log('\n---- deps ----');
+// just output console
+console.log(`\nupdd v${pkg.version}`);
+console.log('\n\n---- deps ----');
 console.log(deps.join('\n'));
 console.log('\n\n---- devDeps ----');
 console.log(devDeps.join('\n'));
+console.log('\n');
 
+// to string
 deps = deps.join(' ')
 devDeps = devDeps.join(' ')
 
-let execStr = '';
-if (client === 'npm') execStr = `npm i ${deps} && npm i -D ${devDeps}`;
-if (client === 'yarn') execStr = `yarn add ${deps} && yarn add -D ${devDeps}`;
+const genSymbols = (cl) => {
+  if (cl === 'npm') return 'i';
+  if (cl === 'yarn') return 'add';
+}
+
+const genExecStr = (cl) => {
+  const sym = genSymbols(cl);
+
+  let depsExecStr = '';
+  let devDepsExecStr = '';
+
+  if (deps) depsExecStr = `${cl} ${sym} ${deps}`;
+  if (devDeps) devDepsExecStr = `${cl} ${sym} -D ${devDeps}`;
+
+  return [depsExecStr, devDepsExecStr]
+    .filter((s) => !(_.isEmpty(s)))
+    .join(' && ');
+
+}
+
+const execStr = genExecStr(client);
 
 if (!execStr) {
   console.error(`ERROR: Not Found exec. (${execStr})`);
 }
 
-console.log(`\n\n🚀 Run Exec:\n${execStr}\n\n`);
+console.log(`\n\n🚀 Run Exec:\n\n${execStr}\n\n`);
 
 exec(execStr, (err, stdout) => {
   if (err) console.error(`ERROR: exec (${err})`);
