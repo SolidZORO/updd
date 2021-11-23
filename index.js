@@ -80,9 +80,9 @@ if (!execStr) {
   console.error(`ERROR: Not Found exec. (${execStr})`);
 }
 
-console.log(`\n\n🚀 Exec Verbose Info\n`);
-console.log(`updd    - v${pkg.version}`);
-console.log(`project - v${upddPkg.version}`);
+console.log(`🚀 Exec Verbose Info\n`);
+console.log(`   updd - v${upddPkg.version}`);
+console.log(`project - v${pkg.version}`);
 
 console.log(`\n\n${execStr}\n\n`);
 
