@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/SolidZORO/updd/compare/v1.1.0...v1.2.0) (2021-11-23)
+
+
+### Features
+
+* add updd version in CLI ([ea60214](https://github.com/SolidZORO/updd/commit/ea6021469af03c7c78a9f8d27287313a61294b22))
+
 ## [1.1.0](https://github.com/SolidZORO/updd/compare/v1.0.0...v1.1.0) (2021-11-23)
 
 
