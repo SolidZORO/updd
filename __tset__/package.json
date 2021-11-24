@@ -1,0 +1,26 @@
+{
+  "name": "updd-demo",
+  "version": "0.999.999",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "up": "node ../index.js"
+  },
+  "updd": {
+    "client": "yarn",
+    "ignore": [
+      "lodash.uniq"
+    ]
+  },
+  "dependencies": {
+    "lodash.debounce": "^4.0.8",
+    "lodash.get": "^4.4.2",
+    "lodash.isequal": "^4.5.0",
+    "lodash.uniq": "^4.5.0"
+  },
+  "devDependencies": {
+    "lodash.defaults": "^4.2.0",
+    "lodash.memoize": "^4.1.2",
+    "lodash.throttle": "^4.1.1"
+  }
+}
