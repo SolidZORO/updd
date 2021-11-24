@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/SolidZORO/updd/compare/v1.3.0...v1.4.0) (2021-11-24)
+
+
+### Features
+
+* add a test demo ([b7fc0d9](https://github.com/SolidZORO/updd/commit/b7fc0d9049934a3680867b6702f191b719e936de))
+* add old/new package diff ([da8e21c](https://github.com/SolidZORO/updd/commit/da8e21cfabaedace220e7bee98873ee350c30f99))
+* split utils ([29a8a02](https://github.com/SolidZORO/updd/commit/29a8a020cfb8547e36e659c7f95a5da31f863dad))
+
 ## [1.3.0](https://github.com/SolidZORO/updd/compare/v1.2.1...v1.3.0) (2021-11-23)
 
 
