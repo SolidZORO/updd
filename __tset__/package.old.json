@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "deep-diff": "^1.0.2",
-    "lodash.isequal": "^4.5.0"
+    "lodash.isequal": "^4.4.0"
   },
   "devDependencies": {
-    "lodash.memoize": "^4.1.2",
-    "lodash.uniq": "^4.5.0"
+    "lodash.memoize": "^4.1.0",
+    "lodash.uniq": "^4.4.0"
   }
 }

@@ -2,8 +2,9 @@
 const path = require('path');
 const { exec } = require('child_process');
 const _ = require('lodash');
+const chalk = require('chalk');
 
-const { genExecStr, parseJsonFile } = require('./utils');
+const { genExecStr, parseJsonFile, showChangelog } = require('./utils');
 
 let client = 'yarn'
 
@@ -14,7 +15,6 @@ let ignoreDeps = [];
 const ROOT_DIR = path.resolve(process.cwd());
 
 const pkg = parseJsonFile(path.resolve(`${ROOT_DIR}/package.json`));
-const upddPkg = parseJsonFile(path.resolve(__dirname, 'package.json'));
 
 if (pkg) {
   // get keys to array
@@ -26,40 +26,35 @@ if (pkg) {
   if (pkg.updd && pkg.updd.ignore) ignoreDeps = pkg.updd.ignore;
 }
 
-console.log(deps);
-
 // remove ignoreDeps
 deps = _.difference(deps, ignoreDeps)
 devDeps = _.difference(devDeps, ignoreDeps)
 
-// just output console
-console.log('\n---- deps ----');
-console.log(deps.join('\n'));
-console.log('\n\n---- devDeps ----');
-console.log(devDeps.join('\n'));
-console.log('\n\n---- ignoreDeps ----');
-console.log(ignoreDeps.join('\n'));
-console.log('\n');
-
+// check exec string
 const execStr = genExecStr(client, { deps, devDeps });
+if (!execStr) return console.error(`ERROR: Not Found exec. (${execStr})`);
 
-if (!execStr) {
-  console.error(`ERROR: Not Found exec. (${execStr})`);
-  return;
-}
+// for display updd bin version
+const upddPkg = parseJsonFile(path.resolve(__dirname, 'package.json'));
 
-console.log(`🚀 Exec Verbose Info\n`);
-console.log(`   updd - v${upddPkg.version}`);
-console.log(`project - v${pkg.version}`);
+// show exec verbose
+console.log(
+  `\n\n🚀 updd v${upddPkg.version} ${chalk.grey('(project v' + pkg.version + ')')}\n` // prettier-ignore
+);
 
 // eslint-disable-next-line max-len
-console.log(`\n\n\n${execStr.split('&&').map((e) => _.trim(e)).join('\n\n')}\n\n`); // prettier-ignore
+console.log(
+  `${execStr.split('&&')
+    .map((e) => chalk.bold(_.trim(e)))
+    .join('\n\n')}\n\n\n\n`
+);
 
 exec(execStr, (err, stdout) => {
-  if (err) {
-    console.error(`ERROR: exec (${err})`);
-    return;
-  }
+  if (err) return console.error(`ERROR: exec (${err})`);
 
+  console.log('📮 Update Log\n');
   console.log(stdout);
+
+  const newPkg = parseJsonFile(path.resolve(`${ROOT_DIR}/package.json`));
+  showChangelog(pkg, newPkg);
 });

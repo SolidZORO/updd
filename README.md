@@ -4,6 +4,9 @@
 
 Update package.json dependencies & devDependencies to latest version.
 
+![updd-demo](./__tset__/updd-demo.png)
+
+
 ## Installation
 
 ```bash
