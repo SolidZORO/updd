@@ -1,43 +1,32 @@
 #!/usr/bin/env node
 const path = require('path');
-const fs = require('fs');
 const { exec } = require('child_process');
 const _ = require('lodash');
 
-const CWD_DIR = process.cwd();
-const ROOT_DIR = path.resolve(CWD_DIR);
-const PACKAGE_JSON_FILE = path.resolve(`${ROOT_DIR}/package.json`);
+const { genExecStr, parseJsonFile } = require('./utils');
 
-upddPkg = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf8')
-);
-
-if (!fs.existsSync(PACKAGE_JSON_FILE)) {
-  console.error(`ERROR: Not Found package.json file. (${PACKAGE_JSON_FILE})`);
-  process.exit();
-  return;
-}
-
-let pkg;
 let client = 'yarn'
 
-let deps = {};
-let devDeps = {};
+let deps = [];
+let devDeps = [];
 let ignoreDeps = [];
 
-try {
-  pkg = JSON.parse(fs.readFileSync(PACKAGE_JSON_FILE, 'utf8'));
+const ROOT_DIR = path.resolve(process.cwd());
 
-  if (pkg) {
-    if (pkg.devDependencies) devDeps = Object.keys(pkg.devDependencies);
-    if (pkg.dependencies) deps = Object.keys(pkg.dependencies);
+const pkg = parseJsonFile(path.resolve(`${ROOT_DIR}/package.json`));
+const upddPkg = parseJsonFile(path.resolve(__dirname, 'package.json'));
 
-    if (pkg.updd && pkg.updd.client) client = pkg.updd.client;
-    if (pkg.updd && pkg.updd.ignore) ignoreDeps = pkg.updd.ignore;
-  }
-} catch (err) {
-  console.error(err);
+if (pkg) {
+  // get keys to array
+  if (pkg.devDependencies) devDeps = Object.keys(pkg.devDependencies);
+  if (pkg.dependencies) deps = Object.keys(pkg.dependencies);
+
+  // updd opts
+  if (pkg.updd && pkg.updd.client) client = pkg.updd.client;
+  if (pkg.updd && pkg.updd.ignore) ignoreDeps = pkg.updd.ignore;
 }
+
+console.log(deps);
 
 // remove ignoreDeps
 deps = _.difference(deps, ignoreDeps)
@@ -52,34 +41,11 @@ console.log('\n\n---- ignoreDeps ----');
 console.log(ignoreDeps.join('\n'));
 console.log('\n');
 
-// to string
-deps = deps.join(' ')
-devDeps = devDeps.join(' ')
-
-const genSymbols = (cl) => {
-  if (cl === 'npm') return 'i';
-  if (cl === 'yarn') return 'add';
-}
-
-const genExecStr = (cl) => {
-  const sym = genSymbols(cl);
-
-  let depsExecStr = '';
-  let devDepsExecStr = '';
-
-  if (deps) depsExecStr = `${cl} ${sym} ${deps}`;
-  if (devDeps) devDepsExecStr = `${cl} ${sym} -D ${devDeps}`;
-
-  return [depsExecStr, devDepsExecStr]
-    .filter((s) => !(_.isEmpty(s)))
-    .join(' && ');
-
-}
-
-const execStr = genExecStr(client);
+const execStr = genExecStr(client, { deps, devDeps });
 
 if (!execStr) {
   console.error(`ERROR: Not Found exec. (${execStr})`);
+  return;
 }
 
 console.log(`🚀 Exec Verbose Info\n`);
@@ -90,7 +56,10 @@ console.log(`project - v${pkg.version}`);
 console.log(`\n\n\n${execStr.split('&&').map((e) => _.trim(e)).join('\n\n')}\n\n`); // prettier-ignore
 
 exec(execStr, (err, stdout) => {
-  if (err) console.error(`ERROR: exec (${err})`);
+  if (err) {
+    console.error(`ERROR: exec (${err})`);
+    return;
+  }
 
   console.log(stdout);
 });
