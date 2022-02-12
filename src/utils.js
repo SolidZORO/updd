@@ -18,8 +18,8 @@ const handleLockDeps = (look, str) => {
   let nextStr = str;
 
   if (!_.isEmpty(look)) {
-    _.map(look, (v, pkgName) => {
-      nextStr = str.replace(pkgName, `${pkgName}@${v}`)
+    _.forEach(look, (v, pkgName) => {
+      nextStr = nextStr.replace(pkgName, `${pkgName}@${v}`)
     });
   }
 
@@ -53,14 +53,24 @@ const genExecStr = (client, {
   ARGV
 }) => {
   const sym = genSymbols(client);
+
   let depsStr = handleLockDeps(lockDeps, depsArrayToSrring(deps));
   let devDepsStr = handleLockDeps(lockDevDeps, depsArrayToSrring(devDeps));
+
+  // console.log(111, 'depsStr', depsStr);
+  // console.log(111, 'devDepsStr', devDepsStr);
 
   // argv --only-lock
   if (ARGV['only-lock']) {
     depsStr = pickLockDeps(depsStr);
     devDepsStr = pickLockDeps(devDepsStr);
   }
+
+  // console.log(222, 'depsStr', depsStr);
+  // console.log(222, 'devDepsStr', devDepsStr);
+
+  // console.log('lockDeps', lockDeps);
+  // console.log('lockDevDeps', lockDevDeps);
 
   let depsExecStr = '';
   let devDepsExecStr = '';

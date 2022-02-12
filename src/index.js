@@ -21,6 +21,7 @@ yargsInst.version(`\n\n${upddPkg.name} v${upddPkg.version}\n\n`)
   .alias('version', 'v');
 
 const ARGV = yargsInst.argv;
+// console.log('>>>>>>>', ARGV);
 
 // ----
 
