@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.2](https://github.com/SolidZORO/updd/compare/v1.6.1...v1.6.2) (2022-02-12)
+
+
+### Bug Fixes
+
+* fixed nextStr replace error ([85e02f1](https://github.com/SolidZORO/updd/commit/85e02f1432be87abac45237077850c08dd6fdc86))
+
 ### [1.6.1](https://github.com/SolidZORO/updd/compare/v1.6.0...v1.6.1) (2022-02-12)
 
 
