@@ -1,7 +1,7 @@
 {
   "name": "updd",
   "description": "update package's dependencies & devDependencies to latest version",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "main": "src/index.js",
   "sideEffect": false,
   "author": "Jason Feng <solidzoro@live.com>",
@@ -48,8 +48,7 @@
     "lockDeps": {
       "chalk": "4.1.2"
     },
-    "lockDevDeps": {
-    }
+    "lockDevDeps": {}
   },
   "dependencies": {
     "chalk": "4.1.2",

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/SolidZORO/updd/compare/v1.4.0...v1.5.0) (2022-02-12)
+
+
+### Features
+
+* add config `lockDeps` and `lockDevDeps` ([11ed634](https://github.com/SolidZORO/updd/commit/11ed63490c82e6c3122556577098bdeb7eb0eb21))
+
 ## [1.4.0](https://github.com/SolidZORO/updd/compare/v1.3.0...v1.4.0) (2021-11-24)
 
 
