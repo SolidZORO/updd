@@ -1,7 +1,7 @@
 {
   "name": "updd",
   "description": "update package's dependencies & devDependencies to latest version",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "main": "src/index.js",
   "sideEffect": false,
   "author": "Jason Feng <solidzoro@live.com>",

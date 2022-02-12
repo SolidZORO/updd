@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.1](https://github.com/SolidZORO/updd/compare/v1.6.0...v1.6.1) (2022-02-12)
+
+
+### Bug Fixes
+
+* filter npm scope package name prefix `@` ([9daef7b](https://github.com/SolidZORO/updd/commit/9daef7bf0f019fc53c6a02f292cf647fbdc9d7fa))
+
 ## [1.6.0](https://github.com/SolidZORO/updd/compare/v1.5.1...v1.6.0) (2022-02-12)
 
 
