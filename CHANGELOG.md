@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/SolidZORO/updd/compare/v1.5.1...v1.6.0) (2022-02-12)
+
+
+### Features
+
+* add CLI args `--only-lock` ([4ed363c](https://github.com/SolidZORO/updd/commit/4ed363c77eb5a8c79417080a963f6f0531064470))
+
 ### [1.5.1](https://github.com/SolidZORO/updd/compare/v1.5.0...v1.5.1) (2022-02-12)
 
 
