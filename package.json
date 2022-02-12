@@ -2,13 +2,13 @@
   "name": "updd",
   "description": "update package's dependencies & devDependencies to latest version",
   "version": "1.4.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "sideEffect": false,
   "author": "Jason Feng <solidzoro@live.com>",
   "license": "MIT",
   "homepage": "https://github.com/SolidZORO/updd",
   "bin": {
-    "updd": "index.js"
+    "updd": "src/index.js"
   },
   "repository": {
     "type": "git",
@@ -44,10 +44,15 @@
     "ignore": [
       "https://github.com/SolidZORO/updd",
       "react"
-    ]
+    ],
+    "lockDeps": {
+      "chalk": "4.1.2"
+    },
+    "lockDevDeps": {
+    }
   },
   "dependencies": {
-    "chalk": "^4.1.2",
+    "chalk": "4.1.2",
     "deep-diff": "^1.0.2",
     "lodash": "^4.17.21"
   },

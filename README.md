@@ -46,7 +46,12 @@ e.g.:
     "ignore": [
       "https://github.com/SolidZORO/updd",
       "react"
-    ]
+    ],
+    "lockDeps": {
+      "chalk": "4.1.2"
+    },
+    "lockDevDeps": {
+    }
   },
   "dependencies": {
   },

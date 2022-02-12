@@ -4,16 +4,20 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "up": "node ../index.js",
+    "up": "node ../src/index.js",
     "diff": "node diff.js"
   },
   "updd": {
     "client": "yarn",
-    "ignore": [
-      "deep-diff"
-    ]
+    "lockDeps": {
+      "chalk": "4.1.2"
+    },
+    "lockDevDeps": {
+      "lodash.memoize": "4.1.0"
+    }
   },
   "dependencies": {
+    "chalk": "^5.0.0",
     "deep-diff": "^1.0.2",
     "lodash.isequal": "^4.5.0"
   },

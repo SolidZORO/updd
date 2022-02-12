@@ -3,34 +3,48 @@ const _ = require('lodash');
 const deepDiff = require('deep-diff');
 const chalk = require('chalk');
 
-const genSymbols = (cl) => {
-  if (cl === 'npm') return 'i';
-  if (cl === 'yarn') return 'add';
+const genSymbols = (client) => {
+  if (client === 'npm') return 'i';
+  if (client === 'yarn') return 'add';
 }
 
 /**
  *
- * @param cl
+ * @param client
  * @param depArrayGroup
  * @returns {string}
  */
-const genExecStr = (cl, depArrayGroup) => {
-  const sym = genSymbols(cl);
+const genExecStr = (client, depArrayGroup) => {
+  const sym = genSymbols(client);
 
   // to string
-  const depsStr = depArrayGroup && !_.isEmpty(depArrayGroup.deps)
+  let depsStr = depArrayGroup && !_.isEmpty(depArrayGroup.deps)
     ? depArrayGroup.deps.join(' ')
     : '';
 
-  const devDepsStr = depArrayGroup && !_.isEmpty(depArrayGroup.devDeps)
+  let devDepsStr = depArrayGroup && !_.isEmpty(depArrayGroup.devDeps)
     ? depArrayGroup.devDeps.join(' ')
     : '';
+
+  // lockDeps
+  if (!_.isEmpty(depArrayGroup.lockDeps)) {
+    _.map(depArrayGroup.lockDeps, (ver, name) => {
+      depsStr = depsStr.replace(name, `${name}@${ver}`)
+    });
+  }
+
+  // devLockDeps
+  if (!_.isEmpty(depArrayGroup.lockDevDeps)) {
+    _.map(depArrayGroup.lockDevDeps, (ver, name) => {
+      devDepsStr = depsStr.replace(name, `${name}@${ver}`)
+    });
+  }
 
   let depsExecStr = '';
   let devDepsExecStr = '';
 
-  if (depsStr) depsExecStr = `${cl} ${sym} ${depsStr}`;
-  if (devDepsStr) devDepsExecStr = `${cl} ${sym} -D ${devDepsStr}`;
+  if (depsStr) depsExecStr = `${client} ${sym} ${depsStr}`;
+  if (devDepsStr) devDepsExecStr = `${client} ${sym} -D ${devDepsStr}`;
 
   return [depsExecStr, devDepsExecStr]
     .filter((s) => !(_.isEmpty(s)))
