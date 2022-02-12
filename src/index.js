@@ -14,7 +14,7 @@ let ignoreDeps = [];
 let lockDeps = {};
 let lockDevDeps = {};
 
-const ROOT_DIR = path.resolve(process.cwd(), '..');
+const ROOT_DIR = path.resolve(process.cwd());
 
 const pkg = parseJsonFile(path.resolve(`${ROOT_DIR}/package.json`));
 
