@@ -5,6 +5,13 @@
   "license": "MIT",
   "scripts": {
     "up": "node ../src/index.js",
+    "up2": "node ../src/index.js --only-lock",
+    "v": "node ../src/index.js -v",
+    "v2": "node ../src/index.js --version",
+    "x": "node ../src/index.js -x",
+    "x2": "node ../src/index.js --x",
+    "h": "node ../src/index.js -h",
+    "h2": "node ../src/index.js --help",
     "diff": "node diff.js"
   },
   "updd": {
@@ -23,7 +30,7 @@
     "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {
-    "lodash.memoize": "^4.1.2",
+    "lodash.memoize": "4.1.0",
     "lodash.uniq": "^4.5.0"
   }
 }

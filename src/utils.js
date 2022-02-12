@@ -8,36 +8,57 @@ const genSymbols = (client) => {
   if (client === 'yarn') return 'add';
 }
 
-/**
- *
- * @param client
- * @param depArrayGroup
- * @returns {string}
- */
-const genExecStr = (client, depArrayGroup) => {
-  const sym = genSymbols(client);
-
-  // to string
-  let depsStr = depArrayGroup && !_.isEmpty(depArrayGroup.deps)
-    ? depArrayGroup.deps.join(' ')
+const depsArrayToSrring = (deps) => {
+  return !_.isEmpty(deps)
+    ? deps.join(' ')
     : '';
+}
 
-  let devDepsStr = depArrayGroup && !_.isEmpty(depArrayGroup.devDeps)
-    ? depArrayGroup.devDeps.join(' ')
-    : '';
+const handleLockDeps = (look, str) => {
+  let nextStr = str;
 
-  // lockDeps
-  if (!_.isEmpty(depArrayGroup.lockDeps)) {
-    _.map(depArrayGroup.lockDeps, (ver, name) => {
-      depsStr = depsStr.replace(name, `${name}@${ver}`)
+  if (!_.isEmpty(look)) {
+    _.map(look, (v, pkgName) => {
+      nextStr = str.replace(pkgName, `${pkgName}@${v}`)
     });
   }
 
-  // devLockDeps
-  if (!_.isEmpty(depArrayGroup.lockDevDeps)) {
-    _.map(depArrayGroup.lockDevDeps, (ver, name) => {
-      devDepsStr = depsStr.replace(name, `${name}@${ver}`)
-    });
+  return nextStr;
+}
+
+const pickLockDeps = (depsStr) => {
+  return (depsStr || '').split(' ')
+    .filter((s) => s.includes('@'))
+    .join(' ');
+}
+
+/**
+ *
+ * @param client
+ *
+ * @param deps
+ * @param devDeps
+ * @param lockDeps
+ * @param lockDevDeps
+ * @param argv
+ *
+ * @returns {string}
+ */
+const genExecStr = (client, {
+  deps,
+  devDeps,
+  lockDeps,
+  lockDevDeps,
+  ARGV
+}) => {
+  const sym = genSymbols(client);
+  let depsStr = handleLockDeps(lockDeps, depsArrayToSrring(deps));
+  let devDepsStr = handleLockDeps(lockDevDeps, depsArrayToSrring(devDeps));
+
+  // argv --only-lock
+  if (ARGV['only-lock']) {
+    depsStr = pickLockDeps(depsStr);
+    devDepsStr = pickLockDeps(devDepsStr);
   }
 
   let depsExecStr = '';

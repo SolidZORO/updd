@@ -53,7 +53,8 @@
   "dependencies": {
     "chalk": "4.1.2",
     "deep-diff": "^1.0.2",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "yargs": "^17.3.1"
   },
   "devDependencies": {}
 }

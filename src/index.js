@@ -3,8 +3,26 @@ const path = require('path');
 const { exec } = require('child_process');
 const _ = require('lodash');
 const chalk = require('chalk');
+const yargs = require('yargs');
+const { hideBin } = require('yargs/helpers')
+const yargsInst = yargs(hideBin(process.argv));
 
 const { genExecStr, parseJsonFile, showChangelog } = require('./utils');
+
+// ----
+
+// for display updd bin version
+const upddPkg = parseJsonFile(path.resolve(__dirname, '../package.json'));
+
+yargsInst.usage('Usage: $0');
+yargsInst.example('$0 --only-lock', '# Install updd lock dependencies ONLY');
+yargsInst.alias('h', 'help');
+yargsInst.version(`\n\n${upddPkg.name} v${upddPkg.version}\n\n`)
+  .alias('version', 'v');
+
+const ARGV = yargsInst.argv;
+
+// ----
 
 let client = 'yarn'
 
@@ -37,11 +55,14 @@ deps = _.difference(deps, ignoreDeps)
 devDeps = _.difference(devDeps, ignoreDeps)
 
 // check exec string
-const execStr = genExecStr(client, { deps, devDeps, lockDeps, lockDevDeps });
+const execStr = genExecStr(client, {
+  deps,
+  devDeps,
+  lockDeps,
+  lockDevDeps,
+  ARGV
+});
 if (!execStr) return console.error(`ERROR: Not Found exec. (${execStr})`);
-
-// for display updd bin version
-const upddPkg = parseJsonFile(path.resolve(__dirname, '../package.json'));
 
 // show exec verbose
 console.log(
