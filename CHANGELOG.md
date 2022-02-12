@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.1](https://github.com/SolidZORO/updd/compare/v1.5.0...v1.5.1) (2022-02-12)
+
+
+### Bug Fixes
+
+* fixed ROOT_DIR path ([d459316](https://github.com/SolidZORO/updd/commit/d4593164dc30a8754e3cdbfe3e964f06acd05e9e))
+
 ## [1.5.0](https://github.com/SolidZORO/updd/compare/v1.4.0...v1.5.0) (2022-02-12)
 
 
