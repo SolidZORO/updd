@@ -28,7 +28,8 @@ const handleLockDeps = (look, str) => {
 
 const pickLockDeps = (depsStr) => {
   return (depsStr || '').split(' ')
-    .filter((s) => s.includes('@'))
+    // substring(1 to remove the @scope)
+    .filter((s) => s.substring(1).includes('@'))
     .join(' ');
 }
 
