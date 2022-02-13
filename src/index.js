@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 const path = require('path');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const _ = require('lodash');
 const chalk = require('chalk');
 const yargs = require('yargs');
-const { hideBin } = require('yargs/helpers')
+const { hideBin } = require('yargs/helpers');
 const yargsInst = yargs(hideBin(process.argv));
 
 const { genExecStr, parseJsonFile, showChangelog } = require('./utils');
@@ -17,7 +17,8 @@ const upddPkg = parseJsonFile(path.resolve(__dirname, '../package.json'));
 yargsInst.usage('Usage: $0');
 yargsInst.example('$0 --only-lock', '# Install updd lock dependencies ONLY');
 yargsInst.alias('h', 'help');
-yargsInst.version(`\n\n${upddPkg.name} v${upddPkg.version}\n\n`)
+yargsInst
+  .version(`\n\n${upddPkg.name} v${upddPkg.version}\n\n`)
   .alias('version', 'v');
 
 const ARGV = yargsInst.argv;
@@ -25,7 +26,7 @@ const ARGV = yargsInst.argv;
 
 // ----
 
-let client = 'yarn'
+let client = 'yarn';
 
 let deps = [];
 let devDeps = [];
@@ -52,8 +53,8 @@ if (pkg) {
 }
 
 // remove ignoreDeps
-deps = _.difference(deps, ignoreDeps)
-devDeps = _.difference(devDeps, ignoreDeps)
+deps = _.difference(deps, ignoreDeps);
+devDeps = _.difference(devDeps, ignoreDeps);
 
 // check exec string
 const execStr = genExecStr(client, {
@@ -61,28 +62,41 @@ const execStr = genExecStr(client, {
   devDeps,
   lockDeps,
   lockDevDeps,
-  ARGV
+  ARGV,
 });
-if (!execStr) return console.error(`ERROR: Not Found exec. (${execStr})`);
+
+if (!execStr) {
+  return console.error(`ERROR: Not Found exec. (${execStr})`);
+}
 
 // show exec verbose
 console.log(
-  `\n\n🚀 updd v${upddPkg.version} ${chalk.grey('(project v' + pkg.version + ')')}\n` // prettier-ignore
+  `\n\n🚀 updd v${upddPkg.version} ${chalk.grey('(project v' + pkg.version + ')')}\n`, // prettier-ignore
 );
 
 // eslint-disable-next-line max-len
 console.log(
-  `${execStr.split('&&')
+  `${execStr
+    .split('&&')
     .map((e) => chalk.bold(_.trim(e)))
-    .join('\n\n')}\n\n\n\n`
+    .join('\n\n')}\n\n\n\n`,
 );
 
-exec(execStr, (err, stdout) => {
-  if (err) return console.error(`ERROR: exec (${err})`);
+console.log('📮 Update Log\n');
 
-  console.log('📮 Update Log\n');
-  console.log(stdout);
+const installExec = spawn(execStr, {
+  shell: true,
+});
 
+installExec.stdout.on('data', (data) => {
+  console.log(data.toString());
+});
+
+installExec.stderr.on('data', (err) => {
+  console.error(`ERROR: exec (${err})`);
+});
+
+installExec.on('exit', () => {
   const newPkg = parseJsonFile(path.resolve(`${ROOT_DIR}/package.json`));
   showChangelog(pkg, newPkg);
 });

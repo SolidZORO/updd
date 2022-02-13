@@ -6,32 +6,33 @@ const chalk = require('chalk');
 const genSymbols = (client) => {
   if (client === 'npm') return 'i';
   if (client === 'yarn') return 'add';
-}
+};
 
 const depsArrayToSrring = (deps) => {
-  return !_.isEmpty(deps)
-    ? deps.join(' ')
-    : '';
-}
+  return !_.isEmpty(deps) ? deps.join(' ') : '';
+};
 
 const handleLockDeps = (look, str) => {
   let nextStr = str;
 
   if (!_.isEmpty(look)) {
     _.forEach(look, (v, pkgName) => {
-      nextStr = nextStr.replace(pkgName, `${pkgName}@${v}`)
+      nextStr = nextStr.replace(pkgName, `${pkgName}@${v}`);
     });
   }
 
   return nextStr;
-}
+};
 
 const pickLockDeps = (depsStr) => {
-  return (depsStr || '').split(' ')
-    // substring(1 to remove the @scope)
-    .filter((s) => s.substring(1).includes('@'))
-    .join(' ');
-}
+  return (
+    (depsStr || '')
+      .split(' ')
+      // substring(1 to remove the @scope)
+      .filter((s) => s.substring(1).includes('@'))
+      .join(' ')
+  );
+};
 
 /**
  *
@@ -45,13 +46,7 @@ const pickLockDeps = (depsStr) => {
  *
  * @returns {string}
  */
-const genExecStr = (client, {
-  deps,
-  devDeps,
-  lockDeps,
-  lockDevDeps,
-  ARGV
-}) => {
+const genExecStr = (client, { deps, devDeps, lockDeps, lockDevDeps, ARGV }) => {
   const sym = genSymbols(client);
 
   let depsStr = handleLockDeps(lockDeps, depsArrayToSrring(deps));
@@ -79,9 +74,9 @@ const genExecStr = (client, {
   if (devDepsStr) devDepsExecStr = `${client} ${sym} -D ${devDepsStr}`;
 
   return [depsExecStr, devDepsExecStr]
-    .filter((s) => !(_.isEmpty(s)))
+    .filter((s) => !_.isEmpty(s))
     .join(' && ');
-}
+};
 
 const parseJsonFile = (jsonPath) => {
   let obj = {};
@@ -101,25 +96,26 @@ const parseJsonFile = (jsonPath) => {
   }
 
   return obj;
-}
+};
 
 const diffPackage = (oldPkg, newPkg) => {
-  const changeList = { dependencies: [], devDependencies: [] }
+  const changeList = { dependencies: [], devDependencies: [] };
   const diffList = deepDiff(oldPkg, newPkg);
 
   if (_.isEmpty(diffList)) return changeList;
 
-  diffList.map((d) => changeList[d.path[0]].push(({
-    name: d.path[1],
-    oldVersion: d.lhs,
-    newVersion: d.rhs,
-  })));
+  diffList.map((d) =>
+    changeList[d.path[0]].push({
+      name: d.path[1],
+      oldVersion: d.lhs,
+      newVersion: d.rhs,
+    }),
+  );
 
   return changeList;
-}
+};
 
 const showChangelog = (oldPkg, newPkg) => {
-
   // ---- follow yarn style ----
   // name              from      to
   // lodash.debounce   3.1.1  ❯  4.0.8
@@ -131,23 +127,30 @@ const showChangelog = (oldPkg, newPkg) => {
 
   if (_.isEmpty(change.dependencies) && _.isEmpty(change.devDependencies)) {
     return console.log(
-      `${chalk.green('success')} All of your dependencies are up to date.\n\n\n`
+      `${chalk.green(
+        'success',
+      )} All of your dependencies are up to date.\n\n\n`,
     );
   }
 
   const allDeps = [];
 
-  if (!_.isEmpty(change.dependencies)) allDeps.push({
-    key: 'dependencies', val: change.dependencies
-  });
+  if (!_.isEmpty(change.dependencies))
+    allDeps.push({
+      key: 'dependencies',
+      val: change.dependencies,
+    });
 
-  if (!_.isEmpty(change.devDependencies)) allDeps.push({
-    key: 'devDependencies', val: change.devDependencies
-  });
+  if (!_.isEmpty(change.devDependencies))
+    allDeps.push({
+      key: 'devDependencies',
+      val: change.devDependencies,
+    });
 
   const longestName = Math.max(
-    ...(change.dependencies.concat(change.devDependencies))
-      .map(el => el.name.length)
+    ...change.dependencies
+      .concat(change.devDependencies)
+      .map((el) => el.name.length),
   );
 
   // pad length
@@ -181,17 +184,21 @@ const showChangelog = (oldPkg, newPkg) => {
       // show name & version
       dep.val.map((c) => {
         const name = _.padEnd(nameColor(c.name), namePad + nameColorPad, ' ');
-        const from = _.padEnd(fromColor(c.oldVersion), fromPad + fromColorPad, ' ');
+        const from = _.padEnd(
+          fromColor(c.oldVersion),
+          fromPad + fromColorPad,
+          ' ',
+        );
         const sym = _.padEnd(symColor('❯'), symPad + symColorPad, ' ');
         const to = toColor(c.newVersion);
 
         console.log(`${name}${from}${sym}${to}`);
-      })
+      });
     }
 
     console.log('\n');
-  })
-}
+  });
+};
 
 module.exports = {
   genSymbols,
@@ -199,4 +206,4 @@ module.exports = {
   parseJsonFile,
   diffPackage,
   showChangelog,
-}
+};
