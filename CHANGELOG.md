@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/SolidZORO/updd/compare/v1.6.2...v1.7.0) (2022-02-13)
+
+
+### Features
+
+* use spawn real-time output install log ([cf51ce2](https://github.com/SolidZORO/updd/commit/cf51ce26701975577b628c377a5451a781d5b699))
+
 ### [1.6.2](https://github.com/SolidZORO/updd/compare/v1.6.1...v1.6.2) (2022-02-12)
 
 
