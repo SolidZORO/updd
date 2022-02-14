@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.1](https://github.com/SolidZORO/updd/compare/v1.7.0...v1.7.1) (2022-02-14)
+
+
+### Refactor
+
+* stderr too much warnings, ignore ([62158de](https://github.com/SolidZORO/updd/commit/62158deada2feb3acd9a595ed124c4f4b545e614))
+
 ## [1.7.0](https://github.com/SolidZORO/updd/compare/v1.6.2...v1.7.0) (2022-02-13)
 
 
