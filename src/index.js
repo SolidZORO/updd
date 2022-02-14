@@ -92,9 +92,10 @@ installExec.stdout.on('data', (data) => {
   console.log(data.toString());
 });
 
-installExec.stderr.on('data', (err) => {
-  console.error(`ERROR: exec (${err})`);
-});
+// Too much warnings, ignore
+// installExec.stderr.on('data', (err) => {
+//   console.error(`ERROR: exec (${err})`);
+// });
 
 installExec.on('exit', () => {
   const newPkg = parseJsonFile(path.resolve(`${ROOT_DIR}/package.json`));
