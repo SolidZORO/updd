@@ -3,13 +3,27 @@ const _ = require('lodash');
 const deepDiff = require('deep-diff');
 const chalk = require('chalk');
 
+const REPLACE_IDENTIFI_SYMBOL = '###';
+
 const genSymbols = (client) => {
   if (client === 'npm') return 'i';
   if (client === 'yarn') return 'add';
 };
 
 const depsArrayToSrring = (deps) => {
-  return !_.isEmpty(deps) ? deps.join(' ') : '';
+  // more accurate replace
+  //
+  // return e.g. `###@sentry/react### ###chalk### `
+  //
+  return !_.isEmpty(deps)
+    ? deps
+        .map(
+          (pkgName) =>
+            `${REPLACE_IDENTIFI_SYMBOL}${pkgName}${REPLACE_IDENTIFI_SYMBOL}`,
+        )
+        .join(' ')
+    : '';
+  // return !_.isEmpty(deps) ? deps.join(' ') : '';
 };
 
 const handleLockDeps = (look, str) => {
@@ -17,11 +31,14 @@ const handleLockDeps = (look, str) => {
 
   if (!_.isEmpty(look)) {
     _.forEach(look, (v, pkgName) => {
-      nextStr = nextStr.replace(pkgName, `${pkgName}@${v}`);
+      nextStr = nextStr.replace(
+        `${REPLACE_IDENTIFI_SYMBOL}${pkgName}${REPLACE_IDENTIFI_SYMBOL}`,
+        `${pkgName}@${v}`,
+      );
     });
   }
 
-  return nextStr;
+  return nextStr.replaceAll(REPLACE_IDENTIFI_SYMBOL, '');
 };
 
 const pickLockDeps = (depsStr) => {
@@ -105,7 +122,7 @@ const diffPackage = (oldPkg, newPkg) => {
   if (_.isEmpty(diffList)) return changeList;
 
   diffList.map((d) =>
-    changeList[d.path[0]].push({
+    changeList[d.path[0]]?.push({
       name: d.path[1],
       oldVersion: d.lhs,
       newVersion: d.rhs,
@@ -136,13 +153,13 @@ const showChangelog = (oldPkg, newPkg) => {
   const allDeps = [];
 
   if (!_.isEmpty(change.dependencies))
-    allDeps.push({
+    allDeps?.push({
       key: 'dependencies',
       val: change.dependencies,
     });
 
   if (!_.isEmpty(change.devDependencies))
-    allDeps.push({
+    allDeps?.push({
       key: 'devDependencies',
       val: change.devDependencies,
     });
