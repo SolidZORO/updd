@@ -1,103 +1,79 @@
 #!/usr/bin/env node
 const path = require('path');
 const { spawn } = require('child_process');
-const _ = require('lodash');
-const chalk = require('chalk');
-const yargs = require('yargs');
+const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
-const yargsInst = yargs(hideBin(process.argv));
+const { loadConfig } = require('./config');
+const {
+  parseJsonFile,
+  createCommands,
+  showChangelog,
+  showProgress,
+} = require('./utils');
+const upddPkg = require('../package.json');
 
-const { genExecStr, parseJsonFile, showChangelog } = require('./utils');
+function install(command, args, cwd) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, { cwd, stdio: 'inherit' });
+    child.on('error', reject);
+    child.on('close', (code, signal) => {
+      if (code === 0) resolve();
+      else
+        reject(
+          new Error(
+            `${command} failed (${signal ? `signal ${signal}` : `exit ${code}`}).`,
+          ),
+        );
+    });
+  });
+}
 
-// ----
-
-// for display updd bin version
-const upddPkg = parseJsonFile(path.resolve(__dirname, '../package.json'));
-
-yargsInst.usage('Usage: $0');
-yargsInst.example('$0 --only-lock', '# Install updd lock dependencies ONLY');
-yargsInst.alias('h', 'help');
-yargsInst
-  .version(`\n\n${upddPkg.name} v${upddPkg.version}\n\n`)
-  .alias('version', 'v');
-
-const ARGV = yargsInst.argv;
-// console.log('>>>>>>>', ARGV);
-
-// ----
-
-let client = 'yarn';
-
-let deps = [];
-let devDeps = [];
-let ignoreDeps = [];
-let lockDeps = {};
-let lockDevDeps = {};
-
-const ROOT_DIR = path.resolve(process.cwd());
-
-const pkg = parseJsonFile(path.resolve(`${ROOT_DIR}/package.json`));
-
-if (pkg) {
-  // get keys to array
-  if (pkg.devDependencies) devDeps = Object.keys(pkg.devDependencies);
-  if (pkg.dependencies) deps = Object.keys(pkg.dependencies);
-
-  // updd opts
-  if (pkg.updd) {
-    if (pkg.updd.client) client = pkg.updd.client;
-    if (pkg.updd.ignore) ignoreDeps = pkg.updd.ignore;
-    if (pkg.updd.lockDeps) lockDeps = pkg.updd.lockDeps;
-    if (pkg.updd.lockDevDeps) lockDevDeps = pkg.updd.lockDevDeps;
+async function main() {
+  const argv = yargs(hideBin(process.argv))
+    .usage('Usage: $0 [--only-lock]')
+    .option('only-lock', {
+      type: 'boolean',
+      default: false,
+      describe: 'Install configured locked dependencies only',
+    })
+    .example('$0 --only-lock', 'Install updd locked dependencies only')
+    .help()
+    .alias('help', 'h')
+    .version(upddPkg.version)
+    .alias('version', 'v')
+    .strict()
+    .parse();
+  const root = process.cwd();
+  const filename = path.join(root, 'package.json');
+  const pkg = parseJsonFile(filename);
+  const config = await loadConfig(root, pkg);
+  const { commands, skipped } = createCommands(pkg, config, argv['only-lock']);
+  console.log(`\n🚀 updd v${upddPkg.version} (${config.client})\n`);
+  if (skipped.length)
+    console.log(`Skipping non-registry dependencies: ${skipped.join(', ')}\n`);
+  if (!commands.length) {
+    console.log('No dependencies selected for update.');
+    return;
   }
+  const total = commands.reduce((sum, command) => sum + command.count, 0);
+  let done = 0;
+  console.log('Updating package.json');
+  showProgress(done, total);
+  try {
+    for (const { command, args, count } of commands) {
+      console.log(`\n${command} ${args.join(' ')}\n`);
+      await install(command, args, root);
+      done += count;
+      showProgress(done, total);
+    }
+  } catch (error) {
+    showChangelog(pkg, parseJsonFile(filename), false);
+    throw error;
+  }
+  showChangelog(pkg, parseJsonFile(filename));
 }
 
-// remove ignoreDeps
-deps = _.difference(deps, ignoreDeps);
-devDeps = _.difference(devDeps, ignoreDeps);
-
-// check exec string
-const execStr = genExecStr(client, {
-  deps,
-  devDeps,
-  lockDeps,
-  lockDevDeps,
-  ARGV,
-});
-
-if (!execStr) {
-  return console.error(`ERROR: Not Found exec. (${execStr})`);
-}
-
-// show exec verbose
-console.log(
-  `\n\n🚀 updd v${upddPkg.version} ${chalk.grey('(project v' + pkg.version + ')')}\n`, // prettier-ignore
-);
-
-// eslint-disable-next-line max-len
-console.log(
-  `${execStr
-    .split('&&')
-    .map((e) => chalk.bold(_.trim(e)))
-    .join('\n\n')}\n\n\n\n`,
-);
-
-console.log('📮 Update Log\n');
-
-const installExec = spawn(execStr, {
-  shell: true,
-});
-
-installExec.stdout.on('data', (data) => {
-  console.log(data.toString());
-});
-
-// Too much warnings, ignore
-// installExec.stderr.on('data', (err) => {
-//   console.error(`ERROR: exec (${err})`);
-// });
-
-installExec.on('exit', () => {
-  const newPkg = parseJsonFile(path.resolve(`${ROOT_DIR}/package.json`));
-  showChangelog(pkg, newPkg);
+main().catch((error) => {
+  console.error(`\nERROR: ${error.message}`);
+  process.exitCode = 1;
 });

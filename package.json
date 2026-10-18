@@ -28,11 +28,13 @@
     "versionup:major": "standard-version -r major",
     "versionup:init": "standard-version --first-release",
     "release-beta": "npm publish --dist-tag --tag beta",
-    "release": "npm publish --dist-tag"
+    "release": "npm publish --dist-tag",
+    "test": "node --test"
   },
   "keywords": [
     "yarn",
     "npm",
+    "pnpm",
     "update",
     "upgrade",
     "interactive",
@@ -52,9 +54,11 @@
   },
   "dependencies": {
     "chalk": "4.1.2",
-    "deep-diff": "^1.0.2",
-    "lodash": "^4.17.21",
-    "yargs": "^17.4.0"
+    "yargs": "^17.4.0",
+    "jiti": "^2.6.1"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
 }
