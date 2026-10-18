@@ -29,7 +29,8 @@
     "versionup:init": "standard-version --first-release",
     "release-beta": "npm publish --dist-tag --tag beta",
     "release": "npm publish --dist-tag",
-    "test": "node --test"
+    "test": "node scripts/preview.js",
+    "test:unit": "node --test"
   },
   "keywords": [
     "yarn",
@@ -41,17 +42,6 @@
     "upgrade-interactive",
     "cli"
   ],
-  "updd": {
-    "client": "yarn",
-    "ignore": [
-      "https://github.com/SolidZORO/updd",
-      "react"
-    ],
-    "lockDeps": {
-      "chalk": "4.1.2"
-    },
-    "lockDevDeps": {}
-  },
   "dependencies": {
     "chalk": "4.1.2",
     "yargs": "^17.4.0",

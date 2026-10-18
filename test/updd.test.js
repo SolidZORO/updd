@@ -194,8 +194,74 @@ for (const client of ['npm', 'yarn', 'pnpm']) {
     assert.match(result.stdout, /2\/2 100%/);
     assert.match(result.stdout, /eslint\s+7\.32\.0\s+→\s+\^3\.0\.0/);
     assert.match(result.stdout, /prettier\s+\^2\.7\.1\s+→\s+\^3\.0\.0/);
+    assert.match(result.stdout, /dependencies\n eslint/);
+    assert.match(result.stdout, /devDependencies\n prettier/);
   });
 }
+
+function changelogOutput(oldPkg, newPkg, completed = true) {
+  const result = spawnSync(
+    process.execPath,
+    [
+      '-e',
+      "require('./src/utils').showChangelog(...JSON.parse(process.argv[1]))",
+      JSON.stringify([oldPkg, newPkg, completed]),
+    ],
+    {
+      cwd: path.resolve(__dirname, '..'),
+      encoding: 'utf8',
+      env: { ...process.env, FORCE_COLOR: '1' },
+    },
+  );
+  assert.equal(result.status, 0, result.stderr);
+  return result.stdout;
+}
+
+test('changelog groups dependencies and colors major/minor/patch upgrades', () => {
+  const output = changelogOutput(
+    {
+      dependencies: { sentry: '^10.70.0', axios: '~1.19.0' },
+      devDependencies: { prettier: '3.0.0' },
+    },
+    {
+      dependencies: { sentry: '^11.8.0', axios: '~1.20.0' },
+      devDependencies: { prettier: '3.0.1' },
+    },
+  );
+  assert.ok(output.indexOf('dependencies') < output.indexOf('sentry'));
+  assert.ok(output.indexOf('axios') < output.indexOf('devDependencies'));
+  assert.ok(output.indexOf('devDependencies') < output.indexOf('prettier'));
+  assert.ok(output.includes('\x1b[31m^11.8.0\x1b[39m'));
+  assert.ok(output.includes('\x1b[33m~1.20.0\x1b[39m'));
+  assert.ok(output.includes('\x1b[32m3.0.1\x1b[39m'));
+});
+
+test('changelog omits empty groups and does not color downgrades or nonnumeric changes as upgrades', () => {
+  const output = changelogOutput(
+    {
+      dependencies: {
+        downgrade: '^3.9.9',
+        prefix: '1.0.0',
+        tag: 'next',
+        prerelease: '1.0.0-beta.1',
+      },
+    },
+    {
+      dependencies: {
+        downgrade: '^2.10.0',
+        prefix: '^1.0.0',
+        tag: 'latest',
+        prerelease: '1.0.0',
+      },
+    },
+    false,
+  );
+  assert.ok(!output.includes('devDependencies'));
+  assert.ok(output.includes('Changes written before the failure'));
+  for (const version of ['^2.10.0', '^1.0.0', 'latest', '1.0.0']) {
+    assert.ok(output.includes(`\x1b[90m${version}\x1b[39m`));
+  }
+});
 
 test('CLI --only-lock only installs selected locks', (t) => {
   const root = fixture(t, {

@@ -61,8 +61,25 @@ function diffPackage(oldPkg, newPkg) {
   return change;
 }
 
+function versionColor(oldVersion, newVersion) {
+  const pattern =
+    /^[~^]?v?(\d+)\.(\d+)\.(\d+)(?:-[\da-z.-]+)?(?:\+[\da-z.-]+)?$/i;
+  const oldParts = oldVersion.trim().match(pattern);
+  const newParts = newVersion.trim().match(pattern);
+  if (!oldParts || !newParts) return chalk.grey;
+  const colors = [chalk.red, chalk.yellow, chalk.green];
+  for (let index = 1; index <= 3; index += 1) {
+    const before = Number(oldParts[index]);
+    const after = Number(newParts[index]);
+    if (after !== before)
+      return after > before ? colors[index - 1] : chalk.grey;
+  }
+  return chalk.grey;
+}
+
 function showChangelog(oldPkg, newPkg, completed = true) {
-  const changes = Object.values(diffPackage(oldPkg, newPkg)).flat();
+  const groups = diffPackage(oldPkg, newPkg);
+  const changes = Object.values(groups).flat();
   console.log(
     completed
       ? '\n✨ Update Completed\n'
@@ -80,12 +97,17 @@ function showChangelog(oldPkg, newPkg, completed = true) {
   const versionWidth = Math.max(
     ...changes.map((item) => item.oldVersion.length),
   );
-  for (const { name, oldVersion, newVersion } of changes) {
-    console.log(
-      ` ${name.padEnd(nameWidth)}  ${chalk.blue(oldVersion.padStart(versionWidth))}  ${chalk.cyan('→')}  ${chalk.green(newVersion)}`,
-    );
+  for (const [section, entries] of Object.entries(groups)) {
+    if (!entries.length) continue;
+    console.log(chalk.bold(section));
+    for (const { name, oldVersion, newVersion } of entries) {
+      const color = versionColor(oldVersion, newVersion);
+      console.log(
+        ` ${name.padEnd(nameWidth)}  ${chalk.blue(oldVersion.padStart(versionWidth))}  ${chalk.cyan('→')}  ${color(newVersion)}`,
+      );
+    }
+    console.log();
   }
-  console.log();
 }
 
 function showProgress(done, total) {

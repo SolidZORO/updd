@@ -34,11 +34,14 @@ Updating package.json
 
 ✨ Update Completed
 
+dependencies
  eslint      7.32.0  →   ^8.0.0
+
+devDependencies
  prettier   ^2.7.1  →   ^3.0.0
 ```
 
-Progress advances after each successful dependency/devDependency install batch. Package manager output remains visible. The final table compares the declarations in `package.json` before and after installation, so version prefixes reflect what your package manager actually saved. Unchanged declarations are omitted.
+Progress advances after each successful dependency/devDependency install batch. Package manager output remains visible. The final table compares the declarations in `package.json` before and after installation, so version prefixes reflect what your package manager actually saved. Unchanged declarations are omitted. Results are grouped into `dependencies` and `devDependencies`. In color-capable terminals, the new version is red for major upgrades, yellow for minor upgrades, and green for patch upgrades. Downgrades, prefix-only changes, prerelease-only changes and unrecognized version ranges use grey.
 
 To install only the configured locked packages already present in dependencies/devDependencies:
 
@@ -109,8 +112,20 @@ A standalone configuration file takes precedence over the entire `package.json#u
 
 ```bash
 yarn install --frozen-lockfile
-yarn test
+yarn test:unit
 ```
+
+Run an actual CLI preview using the root `package.json` and `updd.config.ts`:
+
+```bash
+npm test
+# or
+pnpm test
+```
+
+The preview loads the root configuration and installs the root dependencies in a temporary directory. It prints the normal progress and version changes, then removes the temporary files and installed packages, including on failure or Ctrl+C. The project's `package.json`, lockfiles and `node_modules` stay unchanged. Project `.npmrc` settings are copied into the temporary directory. Workspace and local dependencies follow the CLI's normal skip rules; the preview is intended for this repository's registry dependencies.
+
+Use `npm run test:unit` for the automated tests. CLI options can also be forwarded, for example `npm test -- --only-lock`.
 
 ## License
 
