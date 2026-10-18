@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/SolidZORO/updd/compare/v1.7.2...v1.8.0) (2026-10-18)
+
+
+### Features
+
+* supported pnpm ([40011a2](https://github.com/SolidZORO/updd/commit/40011a23a200d95958c7508cb6f2dded274e722d))
+
 ### [1.7.2](https://github.com/SolidZORO/updd/compare/v1.7.1...v1.7.2) (2022-03-30)
 
 
