@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.1](https://github.com/SolidZORO/updd/compare/v1.8.0...v1.8.1) (2026-10-18)
+
+
+### Features
+
+* 更新结果按 dependencies 和 devDependencies 分组，新版本号按升级级别着色 ([95ebfb5](https://github.com/SolidZORO/updd/commit/95ebfb5cb6e24529ae719f83f3a996fcc86d7cef))
+
 ## [1.8.0](https://github.com/SolidZORO/updd/compare/v1.7.2...v1.8.0) (2026-10-18)
 
 
